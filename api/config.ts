@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import { createTable } from "./src/model/user.schema";
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 export const configApp = async () => {
   dotenv.config();
@@ -23,8 +24,8 @@ export const configApp = async () => {
 
   app.use("/api/v1/auth", userRoutes);
 
-  app.listen(3000, () => {
-    console.log(`App is running  on http://localhost:3000/api/v1/`);
+  app.listen(PORT, () => {
+    console.log(`App is running  on http://localhost:${PORT}/api/v1/`);
     connectPostgres();
   });
 };
