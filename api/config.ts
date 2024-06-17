@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { connectPostgres } from "./Postgres/config";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import { createTable } from "./src/model/user.schema";
 import { createMessageSchema } from "./src/model/message.schema";
 import { createContactSchema } from "./src/model/contact.schema";
@@ -21,6 +22,15 @@ export const configApp = async () => {
   app.use(bodyParser.urlencoded());
   app.use(morgan("dev"));
   app.use(cookieParser());
+  const corsOptions: cors.CorsOptions = {
+    origin: function (origin, callback) {
+      const allowedOrigin = process.env.CORS_ORIGIN || "*";
+      callback(null, allowedOrigin);
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
 
   createTable();
   createMessageSchema();

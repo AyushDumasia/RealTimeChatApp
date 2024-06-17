@@ -82,6 +82,7 @@ export const signUp = AsyncHandler(async (req: Request, res: Response) => {
 // !POST // Login
 export const login = AsyncHandler(async (req: Request, res: Response) => {
   const { phone, password } = req.body;
+  console.log(phone, password);
 
   const q = await client.query(`SELECT * FROM users WHERE phone = $1`, [phone]);
 
