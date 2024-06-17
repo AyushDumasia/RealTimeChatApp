@@ -2,14 +2,14 @@ import jwt from "jsonwebtoken";
 
 export const generateAccessToken = (user: {
   username: string;
-  email: string;
+  phone: string;
   id: object;
 }): string => {
   return jwt.sign(
     {
       user: {
         username: user.username,
-        email: user.email,
+        phone: user.phone,
         id: user.id,
       },
     },

@@ -30,36 +30,33 @@ export const getAllUser = AsyncHandler(async (req: Request, res: Response) => {
 
 // !POST // !SignUp
 export const signUp = AsyncHandler(async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-  console.log(req.body);
+  const { username, phone, password } = req.body;
 
-  const validEmail = await client.query(
-    "SELECT * FROM users WHERE email = $1",
-    [email]
-  );
+  const ValidPhone = await client.query("SELECT * FROM user WHERE phone = $1", [
+    phone,
+  ]);
 
-  if (validEmail.rows.length > 0) {
-    throw new ApiError(409, "Email already exists");
+  if (ValidPhone.rows.length > 0) {
+    throw new ApiError(409, "phone already exists");
   }
 
   const newPassword = await hashPassword(password);
 
-  const q =
-    "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *";
-  const value = [username, email, newPassword];
+  const q = `INSERT INTO users (username, phone, password) VALUES ($1, $2, $3) RETURNING *`;
+  const value = [username, phone, newPassword];
   const result = await client.query(q, value);
   const user = result.rows[0];
 
   const token = generateAccessToken({
     username: user.username,
-    email: user.email,
-    id: user.id,
+    phone: user.phone,
+    id: user.user_id,
   });
 
   req.user = {
     username: user.username,
-    email: user.email,
-    id: user.id,
+    phone: user.phone,
+    id: user.user_id,
   };
 
   res
@@ -73,11 +70,12 @@ export const signUp = AsyncHandler(async (req: Request, res: Response) => {
 
 // !POST // !Login
 export const login = AsyncHandler(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { phone, password } = req.body;
 
-  const q = await client.query("SELECT * FROM users WHERE email= $1 ", [email]);
+  const q = await client.query("SELECT * FROM users WHERE phone= $1 ", [phone]);
 
   const user = q.rows[0];
+  console.log(user);
 
   if (!user) throw new ApiError(404, "User not found");
 
@@ -87,14 +85,14 @@ export const login = AsyncHandler(async (req: Request, res: Response) => {
 
   const token = generateAccessToken({
     username: user.username,
-    email: user.email,
-    id: user.id,
+    phone: user.phone,
+    id: user.user_id,
   });
 
   req.user = {
     username: user.username,
-    email: user.email,
-    id: user.id,
+    phone: user.phone,
+    id: user.user_id,
   };
 
   res
@@ -103,5 +101,5 @@ export const login = AsyncHandler(async (req: Request, res: Response) => {
       maxAge: hundredYearsInMilliseconds,
     })
     .status(201)
-    .json(new ApiResponse(200, user, "User created successfully"));
+    .json(new ApiResponse(200, user, "User logged in successfully"));
 });

@@ -2,12 +2,12 @@ import client from "../../Postgres/config";
 
 const createUserTable = `
   CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100)  NOT NULL,
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    phone CHAR(10) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT current_timestamp
-  )
+);
 `;
 
 export async function createTable() {
