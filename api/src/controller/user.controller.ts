@@ -28,51 +28,62 @@ export const getAllUser = AsyncHandler(async (req: Request, res: Response) => {
   res.json(new ApiResponse(200, user.rows));
 });
 
-// !POST // !SignUp
+// !POST // SignUp
 export const signUp = AsyncHandler(async (req: Request, res: Response) => {
   const { username, phone, password } = req.body;
 
-  const ValidPhone = await client.query("SELECT * FROM user WHERE phone = $1", [
-    phone,
-  ]);
+  try {
+    const ValidPhone = await client.query(
+      "SELECT * FROM users WHERE phone = $1",
+      [phone]
+    );
 
-  if (ValidPhone.rows.length > 0) {
-    throw new ApiError(409, "phone already exists");
+    if (ValidPhone.rows.length > 0) {
+      throw new ApiError(409, "Phone already exists");
+    }
+
+    const newPassword = await hashPassword(password);
+
+    const q = `INSERT INTO users (username, phone, password) VALUES ($1, $2, $3) RETURNING *`;
+    const values = [username, phone, newPassword];
+    const result = await client.query(q, values);
+    const user = result.rows[0];
+
+    const token = generateAccessToken({
+      username: user.username,
+      phone: user.phone,
+      id: user.user_id,
+    });
+
+    req.user = {
+      username: user.username,
+      phone: user.phone,
+      id: user.user_id,
+    };
+
+    res
+      .cookie("userCookie", token, {
+        httpOnly: true,
+        maxAge: hundredYearsInMilliseconds,
+      })
+      .status(201) // Changed to 201 for creation
+      .json(new ApiResponse(201, user, "User created successfully"));
+  } catch (error) {
+    if (error instanceof ApiError) {
+      res
+        .status(error.statusCode)
+        .json(new ApiResponse(error.statusCode, null, error.message));
+    } else {
+      res.status(500).json(new ApiResponse(500, null, "Internal Server Error"));
+    }
   }
-
-  const newPassword = await hashPassword(password);
-
-  const q = `INSERT INTO users (username, phone, password) VALUES ($1, $2, $3) RETURNING *`;
-  const value = [username, phone, newPassword];
-  const result = await client.query(q, value);
-  const user = result.rows[0];
-
-  const token = generateAccessToken({
-    username: user.username,
-    phone: user.phone,
-    id: user.user_id,
-  });
-
-  req.user = {
-    username: user.username,
-    phone: user.phone,
-    id: user.user_id,
-  };
-
-  res
-    .cookie("userCookie", token, {
-      httpOnly: true,
-      maxAge: hundredYearsInMilliseconds,
-    })
-    .status(201)
-    .json(new ApiResponse(200, user, "User created successfully"));
 });
 
-// !POST // !Login
+// !POST // Login
 export const login = AsyncHandler(async (req: Request, res: Response) => {
   const { phone, password } = req.body;
 
-  const q = await client.query("SELECT * FROM users WHERE phone= $1 ", [phone]);
+  const q = await client.query(`SELECT * FROM users WHERE phone = $1`, [phone]);
 
   const user = q.rows[0];
   console.log(user);

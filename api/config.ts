@@ -6,9 +6,11 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { createTable } from "./src/model/user.schema";
 import { createMessageSchema } from "./src/model/message.schema";
+import { createContactSchema } from "./src/model/contact.schema";
 
 import userRoutes from "./src/route/user.route";
 import messageRoutes from "./src/route/message.route";
+import contactRoutes from "./src/route/contact.route";
 
 export const configApp = async () => {
   const app = express();
@@ -22,6 +24,7 @@ export const configApp = async () => {
 
   createTable();
   createMessageSchema();
+  createContactSchema();
 
   app.get("/", (req: Request, res: Response) => {
     res.send("/ Get Route");
@@ -29,6 +32,7 @@ export const configApp = async () => {
 
   app.use("/api/v1/auth", userRoutes);
   app.use("/api/v1/message", messageRoutes);
+  app.use("/api/v1/contact", contactRoutes);
 
   app.listen(PORT, () => {
     console.log(`App is running  on http://localhost:${PORT}/api/v1/`);

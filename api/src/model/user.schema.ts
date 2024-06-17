@@ -6,7 +6,9 @@ const createUserTable = `
     username VARCHAR(255) NOT NULL,
     phone CHAR(10) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT current_timestamp
+    contacts INTEGER[] DEFAULT ARRAY[]::INTEGER[],
+    created_at TIMESTAMP DEFAULT current_timestamp,
+    FOREIGN KEY (contacts) REFERENCES users (user_id)
 );
 `;
 
