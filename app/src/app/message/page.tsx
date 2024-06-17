@@ -1,5 +1,5 @@
 const Message: React.FC = () => {
-  return <p>Message Page</p>;
+  return <p></p>;
 };
 
 export default Message;

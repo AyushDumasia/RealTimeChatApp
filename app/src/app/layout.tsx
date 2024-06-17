@@ -1,5 +1,4 @@
-// app/layout.tsx
-import Navbar from "./navbar";
+import Navbar from "./Components/navbar";
 import { Providers } from "./providers";
 
 export default function RootLayout({

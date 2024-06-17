@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cls && cd api && yarn start",
+    "dev": "cls && cd app && yarn run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
