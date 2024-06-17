@@ -1,3 +1,4 @@
+import { Box, Flex } from "@chakra-ui/react";
 import ContactSideBar from "../Components/contactSideBar";
 import { Providers } from "../providers";
 
@@ -7,13 +8,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-row min-h-screen">
-      <div className="w-1/4">
+    <Flex bg="red">
+      <Box>
         <ContactSideBar />
-      </div>
-      <div className="w-3/4 bg-gray-100">
+      </Box>
+      <Box bg="blue">
         <Providers>{children}</Providers>
-      </div>
-    </div>
+      </Box>
+    </Flex>
   );
 }

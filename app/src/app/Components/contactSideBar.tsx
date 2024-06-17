@@ -13,9 +13,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  useDisclosure,
-  Button,
-  Center,
   IconButton,
 } from "@chakra-ui/react";
 import { FiUsers } from "react-icons/fi";
@@ -44,8 +41,6 @@ const ContactSideBar = () => {
 
   const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-  // const btnRef = React.useRef();
 
   return (
     <>
