@@ -17,14 +17,19 @@ const Message: React.FC = () => {
   };
 
   return (
-    <Flex direction="column" width="90vw">
+    <Flex direction="column" width="100%" maxWidth="600px" margin="auto">
       {/* Receiver's message */}
-      <Flex width="100%" justifyContent="flex-start" alignItems="center" mb="4">
+      <Flex
+        width="100%"
+        justifyContent="flex-start"
+        alignItems="center"
+        marginBottom="4"
+      >
         <Avatar
           name={receiver.name}
           src={receiver.avatarUrl}
           size="sm"
-          mr="2"
+          marginRight="2"
         />
         <Box>
           <Text fontWeight="bold">{receiver.name}</Text>
@@ -33,7 +38,12 @@ const Message: React.FC = () => {
       </Flex>
 
       {/* Message box */}
-      <Flex width="100%" justifyContent="flex-start" alignItems="center" mb="2">
+      <Flex
+        width="100%"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        marginBottom="2"
+      >
         <MessageBox
           position="left"
           avatar={receiver.avatarUrl}
@@ -42,12 +52,26 @@ const Message: React.FC = () => {
           text="Hi, my name is my friend."
           date={new Date()}
           notch={false}
-          className="custom-message-box" // Custom class for styling purposes
-          style={{
-            background: "#f0f0f0", // Example background color
-            borderRadius: "8px", // Example border radius
-            padding: "10px", // Example padding
-          }}
+          maxWidth="80%"
+        />
+      </Flex>
+
+      {/* Sender's information */}
+      <Flex
+        width="100%"
+        justifyContent="flex-end"
+        alignItems="center"
+        marginTop="4"
+      >
+        <Box textAlign="right">
+          <Text fontSize="sm">{sender.name}</Text>
+          <Text fontSize="xs">{sender.role}</Text>
+        </Box>
+        <Avatar
+          name={sender.name}
+          src={sender.avatarUrl}
+          size="sm"
+          marginLeft="2"
         />
       </Flex>
     </Flex>
